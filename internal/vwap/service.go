@@ -2,7 +2,6 @@ package vwap
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -29,7 +28,7 @@ type service struct {
 func NewVwapService(endpoint, protocol, origin string, logger *zap.Logger) (Service, error) {
 	ws, err := websocket.Dial(endpoint, protocol, origin)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("unable to establish WS connection: %v", err))
+		return nil, fmt.Errorf("unable to establish WS connection: %v", err)
 	}
 
 	writer := uilive.New()

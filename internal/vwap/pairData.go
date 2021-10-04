@@ -43,6 +43,4 @@ func (p *pairData) updateTradingPairData(price, size float64) {
 		order:  price * size,
 		volume: size,
 	})
-
-	return
 }

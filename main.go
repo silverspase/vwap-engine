@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"silverspase/vwap_engine/internal/vwap"
 
 	"go.uber.org/zap"
@@ -13,13 +14,19 @@ const (
 
 func main() {
 	logger, _ := zap.NewProduction()
-	defer logger.Sync() // flushes buffer, if any
+	defer func(logger *zap.Logger) { // flushes buffer, if any
+		err := logger.Sync()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(logger)
 
 	service, err := vwap.NewVwapService(websocketEndpoint, "", origin, logger)
 	if err != nil {
 		logger.Fatal("failed to init service", zap.Error(err))
 	}
 
+	// here you can define trading pairs to process
 	service.PollAndProcessData(vwap.SubscribeMessage{
 		Type: "subscribe",
 		ProductIds: []vwap.TradingPair{
